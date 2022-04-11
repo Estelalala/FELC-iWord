@@ -1,0 +1,101 @@
+<style>
+    .banned {
+        pointer-events: none;
+    }
+    .free {
+        pointer-events: auto;
+    }
+    #msg {
+        position: relative;
+        left: 15%;
+    }
+</style>
+<div id="app">
+    <form action="/result" method="post" id="myForm">
+        {{#each pool}}
+            <div class="wrapper" v-show="show({{ addOne @index}})">
+                <div class="q-word">
+                    {{ addOne @index}}.
+                    {{this.question}}
+                </div>
+                <br>
+                <input class="inputs" type="text" name={{this.id}} @keydown.enter.prevent="next($event)" autofocus index="{{ addOne @index}}">
+            </div>
+            <input class="counts" type="text" value="{{this.id}}" name="questionId" style="display: none;">
+        {{/each}}
+        <input type="text" name="time" style="display: none;">
+        <input type="text" name="unit" value="{{unit}}" style="display: none;">
+    </form>
+    <br>
+    <el-button type="primary" id="last" @click="last" disabled>Last</el-button>
+    <span id="msg"></span>
+</div>
+    <script>
+        const app = Vue.createApp({
+            data () {
+                return {
+                    index: 1,
+                    timeStamps: [{{time1}}],
+                    diffs: []
+                }
+            },
+            watch: {
+                index: "changeBtn"
+            },
+            methods: {
+                show(id) {
+                    if (id == this.index) {
+                        return true
+                    } else {
+                        return false
+                    }
+                },
+                last() {
+                        this.index--;
+                },
+                getTimeStamp() {
+                        let timeStamp = new Date().getTime();
+                        let timeInput = document.querySelector("input[name='time']");
+                        let diff = timeStamp - this.timeStamps[this.index-1];
+                        this.timeStamps.push(timeStamp);
+                        diff = diff.toString();
+                        this.diffs[this.index-1] = diff;
+                        console.log(this.diffs);
+                        timeInput.value = this.diffs;
+                },
+                next(event) {
+                    let counts = document.querySelectorAll(".counts");
+                    
+                    this.getTimeStamp();
+                    if (this.index == counts.length-1) {
+                        let msg = document.querySelector("#msg");
+                        msg.innerHTML = "Enter to submit!";
+                    }
+                    if (this.index < counts.length) {
+                        this.index++;
+                        let idx = this.index;
+                        let selector = "input[index='" + idx + "']";
+                        setTimeout(function(){
+                            let inputs = document.querySelector(selector);
+                            inputs.focus();
+                        }, 100);
+                    } else {
+                        let myForm = document.querySelector("#myForm");
+                        myForm.requestSubmit();
+                    }
+                },
+                changeBtn() {
+                    let last = document.querySelector("#last");
+                    if (this.index==1) {
+                        last.disabled = true;
+                        last.className = "el-button el-button--primary is-disabled";
+                    } else {
+                        last.disabled = false;
+                        last.className = "el-button el-button--primary";
+                    }
+                }
+            }
+        });
+        app.use(ElementPlus);
+        app.mount("#app");
+    </script>

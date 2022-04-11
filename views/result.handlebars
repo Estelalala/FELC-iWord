@@ -1,0 +1,106 @@
+<div id="app-result">
+    <h1>Congrats, {{username}}!</h1>
+
+    <h3 id="showPoints"></h3>
+    <h3 id="showTime"></h3>
+    <table class="styled-table">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Question</th>
+                <th>Answer</th>
+                <th>Input</th>
+                <th>Points</th>
+                <th>Time</th>
+            </tr>
+        </thead>
+        {{#each pool}}
+                <tr>
+                    <td>{{ addOne @index}}</td>
+                    <td class="questionArea"></td>
+                    <td class="correctArea"></td>
+                    <td class="answerArea"></td>
+                    <td class="pointsArea"></td>
+                    <td class="timeArea"></td>
+                </tr>
+        {{/each}}
+    </table>
+    <form action="/" method="get">
+        <button class="button-32" type="submit" autofocus>PRESS ENTER TO RESTART</button>
+    </form>
+</div>
+
+
+<script src="js/levenshtein.js"></script>
+<script>
+    let questionAreas = document.querySelectorAll(".questionArea");
+    let correctAreas = document.querySelectorAll(".correctArea");
+    let answerAreas = document.querySelectorAll(".answerArea");
+    let pointsAreas = document.querySelectorAll(".pointsArea");
+    let timeAreas = document.querySelectorAll(".timeArea");
+    let getArr = [];
+    let getDiff = [];
+    let getQues = [];
+    let getCorr = [];
+    let getQuesId = [];
+    let getRanIdx = [{{questionIds}}];
+    let userAns = "";
+    let ldPoints = 0;
+    let score = 0;
+    let totalDiff = 0;
+    {{#each ansArr}}
+        getArr.push("{{this}}");
+    {{/each}}
+
+    {{#each diff}}
+        getDiff.push({{this}});
+    {{/each}}
+
+    {{#each pool}}
+        getQues.push("{{this.question}}");
+        getCorr.push("{{this.answer}}");
+        getQuesId.push({{this.id}});
+    {{/each}}
+    for (k = 0; k < getRanIdx.length; k++) {//乱序
+        for (n = 0; n < getQuesId.length; n++) {//pool
+            if (getRanIdx[k] == getQuesId[n]) {
+                getQues = getQues.concat(getQues.splice(n, 1));
+                getCorr = getCorr.concat(getCorr.splice(n, 1));
+                getQuesId = getQuesId.concat(getQuesId.splice(n, 1));
+            }
+        }
+    }
+    for (i = 0; i < getArr.length; i++) {
+        corrAns = getCorr[i];
+        userAns = getArr[i];
+        ldPoints = LD(corrAns, userAns);
+        if (ldPoints == 100) score++;
+        questionAreas[i].innerHTML = getQues[i];
+        correctAreas[i].innerHTML = corrAns;
+        answerAreas[i].innerHTML = userAns;
+        pointsAreas[i].innerHTML = ldPoints + "%";
+        let diff = getDiff[i];
+        totalDiff += diff;
+        timeAreas[i].innerHTML = formatTime(diff);
+    }
+    score = score / getArr.length * 100;
+    score = score.toFixed(0);
+    let showPoints = document.getElementById("showPoints");
+    showPoints.innerHTML = "You've got " + score + " points!";
+    showTime.innerHTML = "It took you " + formatTime(totalDiff) + " totally!";
+
+    function formatTime(diff) {
+        let sec = 0, min = 0;
+        let result = "";
+        diff = diff * 0.001;
+        diff.toFixed(1);
+        if (diff >= 60) {
+            sec = diff % 60;
+            min = (diff - sec) / 60;
+            return min + "min" + sec.toFixed(0) + " sec";
+        } else {
+            sec = diff;
+            return diff.toFixed(1) + " sec";
+        }
+    }
+</script>

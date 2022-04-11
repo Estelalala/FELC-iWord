@@ -1,0 +1,71 @@
+<div id="app">
+    <h1>Welcome, {{username}}!</h1>
+    <b>EXERCISES</b><br>
+    Fill in each of the following blanks with the hint of meaning.
+    <form action="/play" method="post">
+        Unit
+        <span class="select-dropdown">
+            <select name="unit">
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="4">Four</option>
+            </select>
+        </span>
+        Order
+        <span class="select-dropdown">
+            <select name="order">
+                <option value="1">In order</option>
+                <option value="2">Order by Random</option>
+            </select>
+        </span>
+        <span class="select-dropdown">
+            <select name="number">
+                <option value="3">3</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+                <option value="all">All</option>
+            </select>
+        </span>
+
+        <button class="button-1" type="submit" class="submit" autofocus>Exercise</button>
+    </form><br>
+    <b>PREPARE</b><br>
+    Let's have a review first.
+    <form action="/learn" method="post">
+        Unit
+        <span class="select-dropdown">
+            <select name="unit">
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="4">Four</option>
+            </select>
+        </span>
+        Order
+        <span class="select-dropdown">
+            <select name="order">
+                <option value="1">In order</option>
+                <option value="2">Order by Random</option>
+            </select>
+        </span>
+        <span class="select-dropdown">
+            <select name="number">
+                <option value="3">3</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+                <option value="all">All</option>
+            </select>
+        </span><br>
+        Accent
+        <span class="select-dropdown">
+            <select name="accent">
+                <option value="1">BrE</option>
+                <option value="2">AmE</option>
+            </select>
+        </span>
+        <button class="button-1" type="submit" class="submit">Learn</button>
+    </form>
+</div>

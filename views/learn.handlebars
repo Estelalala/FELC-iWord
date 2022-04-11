@@ -1,0 +1,86 @@
+<div id="app">
+    <form action="/start" method="post" id="myForm">
+        {{#each pool}}
+            <div class="wrapper" v-show="show({{ addOne @index}})">
+                <b>Meaning</b>
+                <div class="q-word">
+                    {{ addOne @index}}.
+                    {{this.question}}
+                </div><br>
+                <b>Word</b>
+                <div class="a-word">
+                    {{this.answer}}
+                </div><br>
+                <b>Chinese</b>
+                <div class="c-word">
+                    {{this.Chinese}}
+                </div>
+            </div>
+            <input class="counts" type="text" style="display: none;">
+        {{/each}}
+    </form>
+    <br>
+    <audio autoplay id="audio1"></audio>
+    <div>
+        <button class="button-1" @click="play"><i class="fa-solid fa-play"></i></button>
+        <button class="button-1" @click="last" id="last" disabled>Last</button>
+        <button class="button-1" @click="next" id="next" autofocus>Next</button>
+    </div>
+    <h2 id="msg"></h2>
+</div>
+    <script>
+        const app = Vue.createApp({
+            data () {
+                return {
+                    index: 1
+                }
+            },
+            watch: {
+                index: "changeBtn"
+            },
+            methods: {
+                show(id) {
+                    if (id == this.index) {
+                        return true
+                    } else {
+                        return false
+                    }
+                },
+                last() {
+                    this.index--
+                },
+                next(event) {
+                    let counts = document.querySelectorAll(".counts");
+                    if (this.index < counts.length) {
+                        this.index++;
+                    } else {
+                        let myForm = document.querySelector("#myForm");
+                        myForm.requestSubmit();
+                    }
+                },
+                play() {
+                    let audio1 = document.querySelector("#audio1");
+                    let a_words = document.querySelectorAll(".a-word");
+                    let ausrc = "https://dict.youdao.com/dictvoice?audio=" + a_words[this.index-1].innerText + "&type=" + {{accent}};
+                    console.log(ausrc);
+                    setTimeout(audio1.src = ausrc, 200);
+                },
+                changeBtn() {
+                    let counts = document.querySelectorAll(".counts");
+                    let last = document.querySelector("#last");
+                    let next = document.querySelector("#next");
+                    if (this.index==1) {
+                        last.disabled = true;
+                        next.innerHTML = 'Next';
+                    } else if (this.index==counts.length) {
+                        next.innerHTML = 'Return';
+                    } else {
+                        last.disabled = false;
+                        next.innerHTML = 'Next';
+                    }
+                }
+            }
+        });
+        app.use(ElementPlus);
+        app.mount("#app");
+    </script>
