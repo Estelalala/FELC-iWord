@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "express": "^4.17.3",
+    "express-handlebars": "^6.0.3",
+    "express-session": "^1.17.2",
+    "js-levenshtein": "^1.1.6",
+    "sqlite3": "^5.0.2",
+    "vue": "^3.2.31"
+  }
+}

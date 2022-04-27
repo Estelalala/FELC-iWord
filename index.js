@@ -58,13 +58,13 @@ app.post("/learn", function (req, res) {
           accent: req.body.accent,
           helpers: {
               addOne: addOne
-          }
+          },
+          username: req.session['username']
         })
       })
 });
 
 app.post("/play", function (req, res) {
-    let timeStamp = new Date().getTime();
     let cmd = "SELECT * FROM pool WHERE unit = ?";
     if (req.body.order==2) {
         cmd += " ORDER BY random()";
@@ -76,11 +76,11 @@ app.post("/play", function (req, res) {
         console.log(err);
         res.render("play", {
           pool: rows,
-          time1: timeStamp,
           unit: req.body.unit,
           helpers: {
               addOne: addOne
-          }
+          },
+          username: req.session['username']
         })
       })
 });
@@ -90,6 +90,13 @@ let addOne = function(index) {
 }
 
 app.post("/result", function (req, res) {
+    let isStrict;
+    if (req.body['strict'] == 0) {
+        isStrict = "ins";
+    } else {
+        isStrict = "s";
+    }
+    console.log(isStrict);
     let questionIds = req.body['questionId'];
     let newRow = '';
     let ansArr = [];
@@ -115,7 +122,8 @@ app.post("/result", function (req, res) {
             helpers: {
                 addOne: addOne
             },
-            questionIds: questionIds
+            questionIds: questionIds,
+            isStrict: isStrict
         })
     });
 });
@@ -125,3 +133,7 @@ app.post("/result", function (req, res) {
 app.listen(1000, function () {
     console.log("Listening on port 1000");
 });
+
+// app.listen(process.env.PORT || 1000, function () {
+//     console.log("Listening on port 1000");
+// });

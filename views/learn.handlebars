@@ -1,3 +1,7 @@
+        <form action="/start" method="post" class="home">
+            <input type="text" name="username" value="{{username}}" style="display: none;">
+            <button class="button-1"><i class="fa-solid fa-house"></i></button>
+        </form>
 <div id="app">
     <form action="/start" method="post" id="myForm">
         {{#each pool}}
@@ -10,29 +14,41 @@
                 <b>Word</b>
                 <div class="a-word">
                     {{this.answer}}
-                </div><br>
-                <b>Chinese</b>
-                <div class="c-word">
-                    {{this.Chinese}}
+                </div>
+                <div v-show="showChinese">
+                    <br><b>Chinese</b>
+                    <div class="c-word">
+                        {{this.Chinese}}
+                    </div>
+                </div>
+                <div v-show="showExample">
+                    <br><b>Example</b>
+                    <div class="c-word">
+                        {{this.example}}
+                    </div>
                 </div>
             </div>
             <input class="counts" type="text" style="display: none;">
         {{/each}}
+        <input type="text" name="username" value="{{username}}" style="display: none;">
     </form>
     <br>
     <audio autoplay id="audio1"></audio>
     <div>
-        <button class="button-1" @click="play"><i class="fa-solid fa-play"></i></button>
         <button class="button-1" @click="last" id="last" disabled>Last</button>
-        <button class="button-1" @click="next" id="next" autofocus>Next</button>
+        <button class="button-1" @click="play"><i class="fa-solid fa-play"></i></button>
+        <button class="button-1" @click="next" id="next" autofocus>Next</button><br>
+        <button class="button-1 showBtn" @click="this.showChinese=!this.showChinese">\{{showChinese ? "Hide" : "Show"}} Chinese</button><br>
+        <button class="button-1 showBtn" @click="this.showExample=!this.showExample">\{{showExample ? "Hide" : "Show"}} Example</button>
     </div>
-    <h2 id="msg"></h2>
 </div>
     <script>
         const app = Vue.createApp({
             data () {
                 return {
-                    index: 1
+                    index: 1,
+                    showChinese: false,
+                    showExample: false
                 }
             },
             watch: {
@@ -55,7 +71,7 @@
                         this.index++;
                     } else {
                         let myForm = document.querySelector("#myForm");
-                        myForm.requestSubmit();
+                        myForm.submit();
                     }
                 },
                 play() {
@@ -81,6 +97,5 @@
                 }
             }
         });
-        app.use(ElementPlus);
         app.mount("#app");
     </script>

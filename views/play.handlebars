@@ -5,11 +5,11 @@
     .free {
         pointer-events: auto;
     }
-    #msg {
-        position: relative;
-        left: 15%;
-    }
 </style>
+        <form action="/start" method="post" class="home">
+            <input type="text" name="username" value="{{username}}" style="display: none;">
+            <button class="button-1"><i class="fa-solid fa-house"></i></button>
+        </form>
 <div id="app">
     <form action="/result" method="post" id="myForm">
         {{#each pool}}
@@ -19,23 +19,27 @@
                     {{this.question}}
                 </div>
                 <br>
-                <input class="inputs" type="text" name={{this.id}} @keydown.enter.prevent="next($event)" autofocus index="{{ addOne @index}}">
+                <input class="inputs" type="text" name={{this.id}} @keydown.enter.prevent="next($event)" autofocus index="{{ addOne @index}}" autocomplete="off">
             </div>
             <input class="counts" type="text" value="{{this.id}}" name="questionId" style="display: none;">
         {{/each}}
         <input type="text" name="time" style="display: none;">
         <input type="text" name="unit" value="{{unit}}" style="display: none;">
+        <input type="checkbox" name="strict" id="strict" value="0">
+        <label for="strict">Case Insensitive</label>
     </form>
-    <br>
-    <el-button type="primary" id="last" @click="last" disabled>Last</el-button>
-    <span id="msg"></span>
+    <div>
+        <button class="button-1" @click="last" id="last" disabled>Last</button>
+        <button class="button-1" @click="next" id="next" autofocus>Next</button>
+    </div>
+    
 </div>
     <script>
         const app = Vue.createApp({
             data () {
                 return {
                     index: 1,
-                    timeStamps: [{{time1}}],
+                    timeStamps: [new Date().getTime()],
                     diffs: []
                 }
             },
@@ -67,10 +71,6 @@
                     let counts = document.querySelectorAll(".counts");
                     
                     this.getTimeStamp();
-                    if (this.index == counts.length-1) {
-                        let msg = document.querySelector("#msg");
-                        msg.innerHTML = "Enter to submit!";
-                    }
                     if (this.index < counts.length) {
                         this.index++;
                         let idx = this.index;
@@ -79,23 +79,28 @@
                             let inputs = document.querySelector(selector);
                             inputs.focus();
                         }, 100);
+                        let strict = document.querySelector('input[name="strict"]');
+                        console.log(strict);
                     } else {
                         let myForm = document.querySelector("#myForm");
-                        myForm.requestSubmit();
+                        myForm.submit();
                     }
                 },
                 changeBtn() {
+                    let counts = document.querySelectorAll(".counts");
                     let last = document.querySelector("#last");
+                    let next = document.querySelector("#next");
                     if (this.index==1) {
                         last.disabled = true;
-                        last.className = "el-button el-button--primary is-disabled";
+                        next.innerHTML = 'Next';
+                    } else if (this.index==counts.length) {
+                        next.innerHTML = 'Submit';
                     } else {
                         last.disabled = false;
-                        last.className = "el-button el-button--primary";
+                        next.innerHTML = 'Next';
                     }
                 }
             }
         });
-        app.use(ElementPlus);
         app.mount("#app");
     </script>

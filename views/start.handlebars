@@ -1,16 +1,19 @@
-<div id="app">
+<div id="app" class="start-app">
     <h1>Welcome, {{username}}!</h1>
     <b>EXERCISES</b><br>
     Fill in each of the following blanks with the hint of meaning.
-    <form action="/play" method="post">
-        Unit
-        <span class="select-dropdown">
-            <select name="unit">
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="4">Four</option>
-            </select>
-        </span>
+    <form action="/play" method="post" class="start-form">
+        <div class="form-unit">
+            Unit
+            <span class="select-dropdown">
+                <select name="unit">
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="4">Four</option>
+                    <option value="5">Five</option>
+                </select>
+            </span>
+        </div>
         Order
         <span class="select-dropdown">
             <select name="order">
@@ -27,21 +30,23 @@
                 <option value="20">20</option>
                 <option value="all">All</option>
             </select>
-        </span>
-
+        </span><br>
         <button class="button-1" type="submit" class="submit" autofocus>Exercise</button>
     </form><br>
     <b>PREPARE</b><br>
     Let's have a review first.
-    <form action="/learn" method="post">
-        Unit
-        <span class="select-dropdown">
-            <select name="unit">
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="4">Four</option>
-            </select>
-        </span>
+    <form action="/learn" method="post" class="start-form">
+        <div class="form-unit">
+            Unit
+            <span class="select-dropdown">
+                <select name="unit">
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="4">Four</option>
+                    <option value="5">Five</option>
+                </select>
+            </span>
+        </div>
         Order
         <span class="select-dropdown">
             <select name="order">
@@ -65,7 +70,7 @@
                 <option value="1">BrE</option>
                 <option value="2">AmE</option>
             </select>
-        </span>
+        </span><br>
         <button class="button-1" type="submit" class="submit">Learn</button>
     </form>
 </div>

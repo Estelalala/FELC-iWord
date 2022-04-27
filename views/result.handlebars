@@ -1,34 +1,35 @@
 <div id="app-result">
     <h1>Congrats, {{username}}!</h1>
-
     <h3 id="showPoints"></h3>
     <h3 id="showTime"></h3>
     <table class="styled-table">
         <thead>
             <tr>
-                <th>No.</th>
+                <th class="hide">No.</th>
                 <th>Question</th>
                 <th>Answer</th>
                 <th>Input</th>
-                <th>Points</th>
-                <th>Time</th>
+                <th class="hide">Points</th>
+                <th class="hide">Time</th>
             </tr>
         </thead>
         {{#each pool}}
                 <tr>
-                    <td>{{ addOne @index}}</td>
+                    <td class="hide">{{ addOne @index}}</td>
                     <td class="questionArea"></td>
                     <td class="correctArea"></td>
                     <td class="answerArea"></td>
-                    <td class="pointsArea"></td>
-                    <td class="timeArea"></td>
+                    <td class="pointsArea hide"></td>
+                    <td class="timeArea hide"></td>
                 </tr>
         {{/each}}
     </table>
-    <form action="/" method="get">
+    <form action="/start" method="post">
         <button class="button-32" type="submit" autofocus>PRESS ENTER TO RESTART</button>
+        <input type="text" name="username" value="{{username}}" style="display: none;">
     </form>
 </div>
+<br>
 
 
 <script src="js/levenshtein.js"></script>
@@ -48,6 +49,7 @@
     let ldPoints = 0;
     let score = 0;
     let totalDiff = 0;
+    let isStrict = "{{isStrict}}";
     {{#each ansArr}}
         getArr.push("{{this}}");
     {{/each}}
@@ -73,11 +75,12 @@
     for (i = 0; i < getArr.length; i++) {
         corrAns = getCorr[i];
         userAns = getArr[i];
+        userAns = modified(userAns);
         ldPoints = LD(corrAns, userAns);
         if (ldPoints == 100) score++;
         questionAreas[i].innerHTML = getQues[i];
         correctAreas[i].innerHTML = corrAns;
-        answerAreas[i].innerHTML = userAns;
+        answerAreas[i].innerHTML = getArr[i];
         pointsAreas[i].innerHTML = ldPoints + "%";
         let diff = getDiff[i];
         totalDiff += diff;
@@ -101,6 +104,13 @@
         } else {
             sec = diff;
             return diff.toFixed(1) + " sec";
+        }
+    }
+    function modified(str) {
+        if (isStrict == "ins") {
+            return str.toLowerCase();
+        } else {
+            return str;
         }
     }
 </script>
